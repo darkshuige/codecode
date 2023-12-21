@@ -4,20 +4,20 @@
 #define endl "\n"
 using namespace std;
 const int M=1000000000;
-struct HeadNode//Í·½áµã 
+struct HeadNode//Í·ï¿½ï¿½ï¿½ 
 {
-    int d,u;//d±íÊ¾¾àÀë£¬u±íÊ¾ÄÄ¸öµã 
-    bool operator < (const HeadNode& rhs) const//Ð¡µÄÔÚÇ°ßÂ 
+    int d,u;//dï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ë£¬uï¿½ï¿½Ê¾ï¿½Ä¸ï¿½ï¿½ï¿½ 
+    bool operator < (const HeadNode& rhs) const//Ð¡ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ 
 	{
         return d>rhs.d;
     }
 }; 
-struct edge//±ß 
+struct edge//ï¿½ï¿½ 
 {
     int to;
     int cost;
 };
-vector<edge>g[10005];//±íÊ¾Ò»¸öµãËùÓÐµÄÁÚ½Ó±ß 
+vector<edge>g[10005];//ï¿½ï¿½Ê¾Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½Ú½Ó±ï¿½ 
 bool vis[10005];
 int n,m,x,s,t;
 int d[10005];
@@ -26,7 +26,7 @@ void djst()
     fill(d+1,d+n+1,M);
     d[s]=0;//sÎª0 
     priority_queue<HeadNode>q;
-    q.push((HeadNode){0,s});//Ò»¿ªÊ¼¾àÀëÎª0£¬µãÎªs 
+    q.push((HeadNode){0,s});//Ò»ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Îª0ï¿½ï¿½ï¿½ï¿½Îªs 
     while(!q.empty())
 	{
         HeadNode x=q.top();q.pop();
@@ -36,7 +36,7 @@ void djst()
         vis[u]=1;
         for(int i=0;i<g[u].size();i++)
 		{
-            edge e=g[u][i];//ÁÚ½Ó±ß 
+            edge e=g[u][i];//ï¿½Ú½Ó±ï¿½ 
             if(d[e.to]>d[u]+e.cost)
 			{
                 d[e.to]=d[u]+e.cost;
@@ -48,11 +48,11 @@ void djst()
 signed main()
 {
 	jiasu;
-    cin>>n>>m>>s>>t;//n±íÊ¾µãµÄ¸öÊý£¬mÎª±ßµÄ¸öÊý£¬sÊÇÆðÊ¼µã£¬tÎªÖÕµã 
+    cin>>n>>m>>s>>t;//nï¿½ï¿½Ê¾ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½mÎªï¿½ßµÄ¸ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ã£¬tÎªï¿½Õµï¿½ 
     for(int i=1;i<=m;i++)
 	{
         edge e;
-        cin>>x>>e.to>>e.cost;//xÊÇÆðÊ¼±ß 
+        cin>>x>>e.to>>e.cost;//xï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ 
         g[x].push_back(e);
     }
     djst();
