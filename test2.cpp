@@ -1,44 +1,93 @@
 	#include<bits/stdc++.h>
+	#define int long long
+	//#define endl "\n"
+	#define jiasu ios::sync_with_stdio(false),cin.tie(0),cout.tie(0)
 	using namespace std;
-	int main()
+	const int maxn=1000005;
+	char a[maxn];
+	signed main()
 	{
-		string s;
-		cin>>s;
-		int n;
-		cin>>n;
-		for(int i=0;i<n;i++)
+		jiasu;
+	    int n,q;
+	    cin>>n>>q;
+	    a[0]='#';
+	    a[n+1]=='#';
+	    int ss=0;
+	    for(int i=1;i<=n;i++)
+	    {
+	    	cin>>a[i];
+	    	if(a[i-1]=='1' && a[i]=='0')
+			 ss++;
+		}
+		if(a[n]=='1') ss++;
+		while(q--)
 		{
+			int sum=ss;
 			int l,r;
-			string a,b;
-			cin>>l>>r>>a>>b;
-			string cut(s,l-1,r-l+1);
-			s.erase(l-1,r-l+1);
-			int l1=a.size();
-			int len=a.size()+b.size();
-			int k=0;
-			int j;
-			for(j=a.size();j<len;j++)
+			cin>>l>>r;
+			if(r==l+1)
 			{
-				a[j]=b[k++];
-			}
-			a[j]='\0';
-			int flag=0;
-			for(j=0;j<s.size();j++)
-			{
-				if(j+len>s.size())
-				 break;
-				string cp(s,j,len);
-				if(cp==a)
+				if(a[l]==a[r])
+				 sum=sum;
+				else
 				{
-					flag=1;
-					break;
+					if(l>1 && r<n)
+					{
+						if(a[l-1]==a[r+1]) sum=sum;
+						else
+						{
+							if(a[l]==a[l-1]) sum++;
+							else sum--;
+						}
+					}
+					else if(l==1 && r==n) sum=sum;
+					else if(l==1)
+					{
+						if(a[l]=='0' && a[r]=='1')
+						{
+							if(a[r+1]=='1') sum++;
+						}
+						else if(a[l]=='1' && a[r]=='0')
+						{
+							if(a[r+1]=='1') sum--;
+						}
+					}
+					else if(r==n)
+					{
+						if(a[r]=='0' && a[l]=='1')
+						{
+							if(a[l-1]=='1') sum++;
+						}
+						else if(a[r]=='1' && a[l]=='0')
+						{
+							if(a[l-1]=='1') sum--;
+						}
+					}
 				}
 			}
-			if(flag)
-			 s.insert(j+l1,cut);
-			else
-			 s.insert(s.size(),cut);
+			else if(l>1 && l<n && r>1 && r<n)
+			{
+				if(a[l]==a[r])
+				 sum=sum;
+				else
+				{
+					if(a[l-1]==a[r+1])
+					 sum=sum;
+					else
+					{
+						if(a[l]==a[l-1] && a[r]==a[r+1])
+						 sum++;
+						else
+						 sum--;	
+					}
+				}
+			}
+			else if(l==1 && r==n)
+			{
+				sum=sum;
+			}
+			cout<<sum<<endl;
 		}
-		cout<<"he,allcornetrrwecaneacheveryGreatWintheworldAcross"<<endl;
-		return 0;
-	} 
+	    return 0;
+	}
+	
