@@ -1,0 +1,47 @@
+#include<bits/stdc++.h>
+#definejiasuios::sync_with_stdio(false),cin.tie(0),cout.tie(0)
+#defineintlonglong
+#defineendl"\n"
+usingnamespacestd;
+constintmaxn=200005;
+deque<int>g[3];
+signedmain()
+{
+jiasu;
+intt;
+cin>>t;
+while(t--)
+\n
+	intn;
+	cin>>n;
+	for(inti=1;i<=n;i++)
+	{
+		intk;
+		cin>>k;
+		g[k].push_back(i);
+		}
+		intsum=0;
+		while(g[1].size()&&g[2].size())
+		{
+			if(g[1].back()<g[2].back())
+			{
+				intk=g[1].back();
+				g[1].pop_back();
+				while(g[2].size()&&g[2].back()>k)
+				g[2].pop_back();
+			}
+			else
+			{
+				intk=g[2].back();
+				g[2].pop_back();
+				while(g[1].size()&&g[1].back()>k)
+				g[1].pop_back();
+			}
+			sum++;
+		}
+		sum+=g[1].size()+g[2].size();
+		cout<<sum<<endl;
+		g[1].clear();g[2].clear();
+	}
+return0;
+}
