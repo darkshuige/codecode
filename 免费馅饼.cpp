@@ -14,6 +14,7 @@ signed main()
 		int ma=0;
 		if(n==0) break;
 		memset(dp,0,sizeof dp);
+		memset(a,0,sizeof a);
 		for(int i=0;i<n;i++)
 		{
 			cin>>x>>t;
