@@ -7,20 +7,15 @@ signed main()
 {
 	int n,m;
 	cin>>n>>m;
-	int cnt=0;
-	while(n>0)
+	int sum=0,cnt=0;
+	while(sum<n)
 	{
-		cnt++;
-		n-=m;
+		sum+=m;
 		if(m%2==0)
 		 m/=2;
 		else
 		 m=m*3+1;
-		if(m==1 || m==2 || m==4)
-		{
-			cnt+=(n/7)*3;
-			n%=7;
-		}
+		cnt++;
 	}
 	cout<<cnt<<endl;
     return 0;
