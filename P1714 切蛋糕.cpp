@@ -5,7 +5,7 @@
 #define lc p<<1
 #define rc p<<1|1 
 using namespace std;
-const int maxn=200005;
+const int maxn=600005;
 deque<int>de;
 int a[maxn],b[maxn];
 signed main()
