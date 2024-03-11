@@ -1,18 +1,56 @@
-#include<bits/stdc++.h>
-#define jiasu ios::sync_with_stdio(false),cin.tie(0),cout.tie(0)
-#define int long long
-#define endl "\n"
-#define lc p<<1
-#define rc p<<1|1 
-#define inf 0x3f3f3f3f3f3f3f3f
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
 using namespace std;
-//时间复杂度O(2*n^3)
-const int maxn=200;
-signed main()
-{
-	int a=-1;
-	unsigned b=(1<<31)-1;
-	printf("%u %x %d\n",a,a,a);
-	printf("%u %x %d\n",b,b,b);
-	return 0;
-} 
+
+const int N=2005;
+int n,m,v,e,c[N],d[N];
+double p[N],dis[N][N],f[N][N][2];
+
+int main(){
+  cin>>n>>m>>v>>e;//时段数n,可换m节,教室数量v,道路数量e
+  for(int i=1;i<=n;i++) scanf("%d",&c[i]); //上课教室
+  for(int i=1;i<=n;i++) scanf("%d",&d[i]); //同课教室
+  for(int i=1;i<=n;i++) scanf("%lf",&p[i]);//通过概率
+  
+  for(int i=1;i<=v;i++)
+    for(int j=1;j<i;j++)
+      dis[i][j]=dis[j][i]=2e9;
+  for(int i=1;i<=e;i++){
+    int a,b,c; scanf("%d%d%d",&a,&b,&c);
+    dis[a][b]=dis[b][a]=min(dis[a][b],1.0*c);  //连边
+  }
+  for(int k=1;k<=v;k++)               //Floyd求最短路
+    for(int i=1;i<=v;i++)
+      for(int j=1;j<i;j++)
+        if(dis[i][k]+dis[k][j]<dis[i][j])
+          dis[i][j]=dis[j][i]=dis[i][k]+dis[k][j];
+  
+  for(int i=1;i<=n;i++)
+    for(int j=0;j<=m;j++)
+      f[i][j][0]=f[i][j][1]=2e9;
+  f[1][0][0]=f[1][1][1]=0;
+  for(int i=2;i<=n;i++){              //第i时段
+    for(int j=0;j<=min(m,i);j++){     //已用了j次机会
+      f[i][j][0]=min(f[i-1][j][0]     //上次不换
+                    +dis[c[i-1]][c[i]],
+                    f[i-1][j][1]      //上次申请换
+                    +dis[c[i-1]][c[i]]*(1-p[i-1])                   
+                    +dis[d[i-1]][c[i]]*p[i-1]);  
+      if(j>0)
+      f[i][j][1]=min(f[i-1][j-1][0]   //上次不换
+                    +dis[c[i-1]][c[i]]*(1-p[i])
+                    +dis[c[i-1]][d[i]]*p[i],
+                    f[i-1][j-1][1]    //上次申请换
+                    +dis[c[i-1]][c[i]]*(1-p[i-1])*(1-p[i])
+                    +dis[c[i-1]][d[i]]*(1-p[i-1])*p[i]
+                    +dis[d[i-1]][c[i]]*p[i-1]*(1-p[i])
+                    +dis[d[i-1]][d[i]]*p[i-1]*p[i]);
+    }
+  }
+  double ans=2e9;
+  for(int i=0;i<=m;i++)
+    ans=min(ans,min(f[n][i][0],f[n][i][1]));
+  printf("%.2lf",ans);
+}
