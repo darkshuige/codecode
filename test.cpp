@@ -1,56 +1,38 @@
-#include <iostream>
-#include <cstring>
-#include <algorithm>
-#include <cmath>
+#include<cstdio>
+#include<cstring>
+#include<iostream>
+#define N 205
 using namespace std;
 
-const int N=2005;
-int n,m,v,e,c[N],d[N];
-double p[N],dis[N][N],f[N][N][2];
+int dx[5]={0,-1,1,0,0},dy[5]={0,0,0,-1,1};
+char map[N][N];
+int n,m,sx,sy,K, ans,f[N][N];
+struct node{int f,pos;} q[N]; //最长距离f,位置pos
 
-int main(){
-  cin>>n>>m>>v>>e;//时段数n,可换m节,教室数量v,道路数量e
-  for(int i=1;i<=n;i++) scanf("%d",&c[i]); //上课教室
-  for(int i=1;i<=n;i++) scanf("%d",&d[i]); //同课教室
-  for(int i=1;i<=n;i++) scanf("%lf",&p[i]);//通过概率
-  
-  for(int i=1;i<=v;i++)
-    for(int j=1;j<i;j++)
-      dis[i][j]=dis[j][i]=2e9;
-  for(int i=1;i<=e;i++){
-    int a,b,c; scanf("%d%d%d",&a,&b,&c);
-    dis[a][b]=dis[b][a]=min(dis[a][b],1.0*c);  //连边
-  }
-  for(int k=1;k<=v;k++)               //Floyd求最短路
-    for(int i=1;i<=v;i++)
-      for(int j=1;j<i;j++)
-        if(dis[i][k]+dis[k][j]<dis[i][j])
-          dis[i][j]=dis[j][i]=dis[i][k]+dis[k][j];
-  
-  for(int i=1;i<=n;i++)
-    for(int j=0;j<=m;j++)
-      f[i][j][0]=f[i][j][1]=2e9;
-  f[1][0][0]=f[1][1][1]=0;
-  for(int i=2;i<=n;i++){              //第i时段
-    for(int j=0;j<=min(m,i);j++){     //已用了j次机会
-      f[i][j][0]=min(f[i-1][j][0]     //上次不换
-                    +dis[c[i-1]][c[i]],
-                    f[i-1][j][1]      //上次申请换
-                    +dis[c[i-1]][c[i]]*(1-p[i-1])                   
-                    +dis[d[i-1]][c[i]]*p[i-1]);  
-      if(j>0)
-      f[i][j][1]=min(f[i-1][j-1][0]   //上次不换
-                    +dis[c[i-1]][c[i]]*(1-p[i])
-                    +dis[c[i-1]][d[i]]*p[i],
-                    f[i-1][j-1][1]    //上次申请换
-                    +dis[c[i-1]][c[i]]*(1-p[i-1])*(1-p[i])
-                    +dis[c[i-1]][d[i]]*(1-p[i-1])*p[i]
-                    +dis[d[i-1]][c[i]]*p[i-1]*(1-p[i])
-                    +dis[d[i-1]][d[i]]*p[i-1]*p[i]);
+//起点坐标x,y，行列长度L，时区长度tim，方向d
+void DP(int x,int y,int L,int tim,int d){
+  int h=1,t=0;
+  for(int i=1;i<=L;i++,x+=dx[d],y+=dy[d]){
+    if(map[x][y]=='x') h=1,t=0; //遇到障碍，清空队列
+    else{
+      while(h<=t && q[t].f+i-q[t].pos<=f[x][y]) t--;
+      q[++t]=node{f[x][y],i};
+      if(q[h].pos<i-tim) h++;
+      f[x][y]=q[h].f+i-q[h].pos;
+      ans=max(ans,f[x][y]);
     }
   }
-  double ans=2e9;
-  for(int i=0;i<=m;i++)
-    ans=min(ans,min(f[n][i][0],f[n][i][1]));
-  printf("%.2lf",ans);
+}
+int main(){
+  scanf("%d%d%d%d%d",&n,&m,&sx,&sy,&K);
+  for(int i=1;i<=n;i++) scanf("%s",map[i]+1);
+  memset(f,-0x3f,sizeof(f)); f[sx][sy]=0;
+  for(int k=1,s,t,d,tim;k<=K;k++){    //枚举k个时间区间
+    scanf("%d%d%d",&s,&t,&d); tim=t-s+1;
+    if(d==1) for(int i=1;i<=m;i++) DP(n,i,n,tim,d);//上
+    if(d==2) for(int i=1;i<=m;i++) DP(1,i,n,tim,d);//下
+    if(d==3) for(int i=1;i<=n;i++) DP(i,m,m,tim,d);//左
+    if(d==4) for(int i=1;i<=n;i++) DP(i,1,m,tim,d);//右
+  }
+  printf("%d",ans);
 }
