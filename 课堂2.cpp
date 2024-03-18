@@ -33,7 +33,15 @@ void add(node* head, node* kk)
         head = head->ne;
     head->ne = kk;
 }
-
+node* reverse_linked_list(node* head) 
+{
+    if (head == NULL || head->ne == NULL)
+        return head;
+    node* rest = reverse_linked_list(head->ne);
+    head->ne->ne = head;
+    head->ne = NULL;
+    return rest;
+}
 int main() 
 {
     node* head = new node(-1);
@@ -52,7 +60,15 @@ int main()
     node* p = head->ne;
     while (p != NULL) 
 	{
-        cout << p->val << endl;
+        cout << p->val <<" ";
+        p = p->ne;
+    }
+    cout<<endl;
+    head->ne = reverse_linked_list(head->ne);
+    p = head->ne;
+    while (p != NULL) 
+	{
+        cout << p->val <<" ";
         p = p->ne;
     }
     return 0;

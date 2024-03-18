@@ -33,7 +33,6 @@ void add(node* head, node* kk)
         head = head->ne;
     head->ne = kk;
 }
-
 int main() 
 {
     node* head = new node(-1);
