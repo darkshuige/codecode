@@ -10,22 +10,22 @@ const int maxn=200;
 const int mod=1000000007;
 struct matrix
 {
-	int c[maxn][maxn];
+	int c[3][3];
 	matrix(){memset(c,0,sizeof c);}
 }a,res;
 int n,k;
 matrix mul(matrix a,matrix b)
 {
 	matrix t;
-	for(int i=1;i<=n;i++)
-	 for(int j=1;j<=n;j++)
-	  for(int k=1;k<=n;k++)
+	for(int i=1;i<=2;i++)
+	 for(int j=1;j<=2;j++)
+	  for(int k=1;k<=2;k++)
 	   t.c[i][j]=(t.c[i][j]+a.c[i][k]*b.c[k][j])%mod;
 	return t;
 }
-void skm(matrix a,int k)
+void skm(int k)
 {
-	for(int i=1;i<=n;i++) res.c[i][i]=1;
+	res.c[1][1]=1;res.c[1][2]=1;a.c[1][1]=1;a.c[1][2]=1;a.c[2][1]=1;
 	while(k)
 	{
 		if(k & 1) res=mul(res,a);
@@ -36,18 +36,13 @@ void skm(matrix a,int k)
 signed main()
 {
 	jiasu;
-	cin>>n>>k;
-	for(int i=1;i<=n;i++)
-	 for(int j=1;j<=n;j++)
-	  cin>>a.c[i][j];
-	skm(a,k);
-	for(int i=1;i<=n;i++)
+	cin>>n;
+	if(n<=2)
 	{
-		for(int j=1;j<=n;j++)
-		{
-			cout<<res.c[i][j]<<" ";			
-		}
-		cout<<endl;
+		cout<<1<<endl;
+		return 0;
 	}
+	skm(n-2);
+	cout<<res.c[1][1]<<endl;
 	return 0;
 }
