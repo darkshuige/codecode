@@ -20,15 +20,17 @@ matrix mul(matrix a,matrix b)
 	for(int i=1;i<=3;i++)
 	 for(int j=1;j<=3;j++)
 	  for(int k=1;k<=3;k++)
-	   t.c[i][j]=(t.c[i][j]+a.c[i][k]*b.c[k][j])%mod;
+	   t.c[i][j]=(t.c[i][j]+a.c[i][k]*b.c[k][j])%mod,t.c[i][j]%=mod;
 	return t;
 }
 void skm(int k)
 {
+	memset(res.c, 0, sizeof(res.c)); 
 	res.c[1][1]=1;res.c[1][2]=1;res.c[1][3]=1;
-	a.c[1][1]=1;a.c[1][2]=1;a.c[1][1]=0;
-	a.c[2][1]=0;a.c[2][2]=0;a.c[2][1]=1;
-	a.c[3][1]=1;a.c[3][2]=0;a.c[3][1]=0;
+	memset(a.c, 0, sizeof(a.c)); 
+	a.c[1][1]=1;a.c[1][2]=1;a.c[1][3]=0;
+	a.c[2][1]=0;a.c[2][2]=0;a.c[2][3]=1;
+	a.c[3][1]=1;a.c[3][2]=0;a.c[3][3]=0;
 	while(k)
 	{
 		if(k & 1) res=mul(res,a);
@@ -47,11 +49,10 @@ signed main()
 		if(n<=3)
 		{
 			cout<<1<<endl;
-			return 0;
+			continue;
 		}
 		skm(n-3);
 		cout<<res.c[1][1]<<endl;	
 	}
-	
 	return 0;
 }
