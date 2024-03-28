@@ -1,45 +1,34 @@
-#include <iostream>
+#include<bits/stdc++.h>
+#define endl "\n"
 using namespace std;
+int a[4], b[4],ans=0;
+void solve() {
+	ans = 0;
+	cin >> a[1] >> a[2] >> a[3];
+	cin >> b[1] >> b[2] >> b[3];
+	for (int i = 1; i <= 3; ++i) {
+		if (a[i] <= b[i % 3 + 1]) ans += a[i], b[i % 3 + 1] -= a[i];
+		else {
+			ans += b[i % 3 + 1];
+			a[i] -= b[i % 3 + 1];
+			b[i % 3 + 1] = 0;
+			if (a[i] <= b[i]) b[i] -= a[i];
+			else {
+				a[i] -= b[i];
+				b[i] = 0;
+				ans -= a[i%3+2];
+				b[i%3+2] -= a[i];
+			}
+		}
+		//cout << ans << endl;
+	}
+	cout << ans << endl;
 
-typedef long long LL;
-int a,b,m,phi,flag;
-char s[20000005];
-
-int get_phi(int n){//求欧拉函数
-  int res = n;
-  for(int i=2; i*i<=n; i++){
-    if(n%i == 0){
-      res = res/i*(i-1);
-      while(n%i == 0) n /= i;
-    }
-  }
-  if(n>1) res = res/n*(n-1);
-  return res;
 }
-int depow(int phi){//降幂
-  int b = 0;
-    for(int i=0; s[i]; i++){
-      b = b*10+(s[i]-'0');
-      if(b>=phi) flag=1, b%=phi;
-    }
-    if(flag) b += phi;
-    return b;
-}
-int qpow(LL a, int b){//快速幂
-    int res = 1;
-    while(b){
-      if(b&1) res = res*a%m;
-      a = a*a%m;
-      b >>= 1;
-    }
-    return res;
-}
-int main(){
-    scanf("%d%d%s", &a, &m, s);
-    phi = get_phi(m);
-    cout<<phi<<endl;
-  b = depow(phi);
-  cout<<b<<endl;
-    printf("%d", qpow(a,b));
-    return 0;
+int main() {
+	int T;
+	cin >> T;
+	while (T--) {
+		solve();
+	}
 }

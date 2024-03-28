@@ -16,7 +16,7 @@ int quickpow(LL a, int b, int p)
 int main()
 {
 	cin >> a >> p;
-	if(a % p)
+	if(a % p)//p一定要是质数
 	 printf("%d\n",quickpow(a,p-2,p));//a p互质，a^(p-2)就是a模p的乘法逆元
   return 0;
 }

@@ -55,9 +55,7 @@ signed main()
 		
 	cin>>a>>m>>b;
 	int phi=init(m);//先计算phi(m)
-	cout<<phi<<endl;
 	int bb=depow(phi);
-	cout<<bb<<endl;
 	cout<<ksm(a,bb)<<endl;
 	return 0;
 }
