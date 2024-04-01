@@ -25,7 +25,13 @@ int gauss()
 		  	  swap(a[k],a[i]);
 		  	  break;
 		  }
-		if(fabs(a[i][i])<eps) return 0; //无解
+		if(fabs(a[i][i])<eps)
+		{
+			if(a[i][n+1]!=0)
+			 return 0; //无解
+			else if(a[i][n+1]==0)
+			 return 2;//有无限多解
+		} 
 		for(int j=n+1;j>=i;j--) //变1
 		 a[i][j]/=a[i][i];
 		for(int k=i+1;k<=n;k++)
@@ -44,12 +50,14 @@ signed main()
 	for(int i=1;i<=n;i++)
 	 for(int j=1;j<=n+1;j++)
 	  cin>>a[i][j];
-	if(gauss())
+	if(gauss()==1)
 	{
 		for(int i=1;i<n+1;i++)
-		 cout<<fixed<<setprecision(2)<<a[i][n+1]<<endl;
+		 cout<<"x"<<i<<"="<<fixed<<setprecision(2)<<a[i][n+1]<<endl;
 	}
+	else if(gauss()==0)
+	 cout<<"-1"<<endl;
 	else
-	 cout<<"No Solution"<<endl;
+	 cout<<0<<endl;
 	return 0;
 }
