@@ -49,7 +49,7 @@ signed main()
 {
 	int n,m;
 	cin>>n>>m;
-	inti(n);
+	init(n);
 	int len=1; c[0]=1;
 	for(int i=0;i<cnt;i++)
 	{
