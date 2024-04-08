@@ -6,7 +6,7 @@
 #define rc p<<1|1 
 #define inf 0x3f3f3f3f3f3f3f3f
 using namespace std;
-const int maxn=300005;
+const int maxn=500005;
 int a[maxn],f[maxn],b[maxn];
 int m,n,p;
 int ksm(int a,int b)
@@ -32,6 +32,33 @@ int sg(int x)
 signed main()
 {
 	jiasu;
-	cout<<ksm(2,60);
+	cin>>n>>p;
+	if(p==1)
+	{
+		int sum=0;
+		for(int i=1;i<=n;i++)
+		{
+			int x; cin>>x;
+			sum+=x;
+		}
+		if(sum & 1)
+		 cout<<"GOOD"<<endl;
+		else
+		 cout<<"BAD"<<endl;
+	}
+	else if(p!=1)
+	{
+		int ma=LLONG_MIN;
+		for(int i=0;i<n;i++)
+		 cin>>b[i],ma=max(ma,b[i]);
+		int pos=0;
+		while(ksm(p,pos)<=ma) a[m++]=ksm(p,pos++);
+		memset(f,-1,sizeof f);
+		int res=0;
+		for(int i=0;i<n;i++)
+			res^=sg(b[i]);
+		if(res) cout<<"GOOD"<<endl;
+		else cout<<"BAD"<<endl;
+	}
 	return 0;
 }
