@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能问答系统</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, lightblue 100%);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+        #question-box {
+            position: relative;
+            margin-top: 20px;
+        }
+        #question-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        #submit-btn, #reset-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #667eea;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #submit-btn:hover, #reset-btn:hover {
+            background-color:#667fff;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .container {
+            animation: fadeIn 1s ease-in-out;
+        }
+    </style>
+    <!-- 样式保持不变 -->
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>欢迎来到文旅智能问答系统</h1>
+            <p>请输入你的问题，我们会尽快给你答案。</p>
+        </header>
+        <div id="question-box">
+            <input type="text" id="question-input" placeholder="在这里输入问题...">
+            <button id="submit-btn">提交问题</button>
+            <button id="reset-btn" style="margin-left: 10px;">重置</button>
+        </div>
+        <div id="answer-box">
+			你好，我是智能文旅问答助手，很高兴见到你，欢迎问我任何问题
+        </div>
+    </div>
+    <script>
+        document.getElementById('submit-btn').onclick = function() {
+            var question = document.getElementById('question-input').value;
+            fetch('http://localhost:8000/api/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({input: question})
+            })
+            .then(response => response.json())
+            .then(data => {
+                var answerBox = document.getElementById('answer-box');
+                answerBox.innerHTML = '<p>' + data.response + '</p>';
+            })
+            .catch(error => console.error('Error:', error));
+        };
+
+        document.getElementById('reset-btn').onclick = function() {
+            document.getElementById('question-input').value = '';
+            document.getElementById('answer-box').innerHTML = '';
+        };
+    </script>
+</body>
+</html>

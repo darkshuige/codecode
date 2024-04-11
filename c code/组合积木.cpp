@@ -49,7 +49,6 @@ signed main()
 		{
 			cin>>p1;
 			int nim=a[p1].size();
-			vector<node>v;
 			for(int k=0;k<nim;k++)
 			{
 				node no=a[p1].back();
