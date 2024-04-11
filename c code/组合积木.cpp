@@ -17,13 +17,63 @@ struct node
 deque<node>a[maxn];
 signed main()
 {
-	int n,m,k; cin>>n>>m>>k;
-	for(int i=1;i<=k;i++)
+	int n,m; cin>>n>>m;
+	for(int i=1;i<=n;i++)
 	{
-		char ip;
-		cin>>ip;
-		a[1].push_front({ip,i});
+		char k; cin>>k;
+		node no={k,i};
+		a[i].push_back(no);
 	}
+	while(m--)
+	{
+		int op,p1,p2; cin>>op;
+		if(op==1)
+		{
+			cin>>p1>>p2;
+			while(!a[p1].empty())
+			{
+				a[p2].push_front(a[p1].front());
+				a[p1].pop_front();
+			}
+		}
+		else if(op==2)
+		{
+			cin>>p1>>p2;
+			while(!a[p1].empty())
+			{
+				a[p2].push_front(a[p1].back());
+				a[p1].pop_back();
+			}
+		}
+		else if(op==3)
+		{
+			cin>>p1;
+			int nim=a[p1].size();
+			vector<node>v;
+			for(int k=0;k<nim;k++)
+			{
+				node no=a[p1].back();
+				a[p1].pop_back();
+				int fu=no.num;
+				if(fu==p1)
+				 v.push_back(no);
+				else
+				 a[fu].push_front(no);
+				
+				for(auto no:v)
+				 a[p1].push_front(no);
+			}
+		}
+	}
+//	for(int i=1;i<=n;i++)
+//	{
+//		while(!a[i].empty())
+//		{
+//			cout<<a[i].back().kk<<" ";
+//			a[i].pop_back();
+//		}
+//		cout<<endl;
+//	}
 	for(int i=1;i<=n;i++)
 	{
 		if(a[i].size()==0)
@@ -59,7 +109,7 @@ signed main()
 							flag=1;
 							if(ss.size()!=0) v.push_back(ss);
 							s.erase(k,ss.size()+2);
-							 ss="";
+							ss="";
 							break;
 						}
 						else
@@ -81,8 +131,6 @@ signed main()
 			{
 				if(v.size()!=0)
 				 cout<<v.size()<<" ";
-				else
-				 cout<<0<<endl;
 				for(int l=0;l<v.size();l++)
 				{
 					if(l!=0) cout<<" ";
