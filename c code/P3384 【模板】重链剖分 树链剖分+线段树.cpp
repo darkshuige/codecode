@@ -90,17 +90,19 @@ int query_tree(int u) //查询子树
 {
 	return query(1,id[u],id[u]+sz[u]-1);
 }
-void update(int u,int l,int r,int k){ //线段树修改
-  if(l<=tr[u].l&&tr[u].r<=r){
-    tr[u].add+=k;
-    tr[u].sum+=k*(tr[u].r-tr[u].l+1);
-    return;
-  }
-  pushdown(u);
-  int mid=tr[u].l+tr[u].r>>1;
-  if(l<=mid) update(lc,l,r,k);
-  if(r>mid) update(rc,l,r,k);
-  pushup(u);
+void update(int u,int l,int r,int k) //线段树修改
+{
+	if(l<=tr[u].l && r>=tr[u].r)
+	{
+		tr[u].add+=k;
+		tr[u].sum+=k*(tr[u].r-tr[u].l+1);
+		return ;
+	}
+	pushdown(u);
+	int mid=tr[u].l+tr[u].r>>1;
+	if(l<=mid) update(lc,l,r,k);
+	if(r>mid) update(rc,l,r,k);
+	pushup(u);
 }
 void update_path(int u,int v,int k)
 {
