@@ -16,12 +16,12 @@ signed main()
 	{
 		cin>>s;
 		ull sum=0;
-		for(int i=0;i<s.size();i++)
+		for(int i=0;i<s.siz();i++)
 		{
 			sum=sum*P+(s[i]-48);
 		}
 		st.insert(sum);
 	}
-	cout<<st.size()<<endl;
+	cout<<st.siz()<<endl;
 	return 0;
 }
