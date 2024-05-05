@@ -1,128 +1,98 @@
-#include <iostream>
+#include<iostream>
+#include<cstring>
+#define ll long long
 using namespace std;
-#define jiasu ios::sync_with_stdio(false),cin.tie(0),cout.tie(0)
-#define ls(x) tr[x].s[0]
-#define rs(x) tr[x].s[1]
-const int N=1100010, INF=(1<<30)+1;
-struct node{
-  int s[2]; //左右儿子
-  int p; //父亲
-  int v; //节点权值
-  int cnt; //权值出现次数
-  int siz; //子树大小
-  void init(int p1,int v1){
-    p=p1, v=v1;
-    cnt=siz=1;
-  }
-}tr[N];
-int root; //根节点编号
-int idx; //节点个数
-
-void pushup(int x){
-  tr[x].siz=tr[ls(x)].siz+tr[rs(x)].siz+tr[x].cnt;
+int ans[1001],lena;
+void add(int b[],int len)//加
+{
+	lena=max(len,lena);
+	for(int i=1;i<=lena;i++)
+	{
+		ans[i]+=b[i];
+		ans[i+1]+=ans[i]/10;	
+		ans[i]%=10;
+	}
+	if(ans[lena+1])++lena;
 }
-void rotate(int x){
-  int y=tr[x].p, z=tr[y].p;
-  int k = tr[y].s[1]==x;
-  tr[z].s[tr[z].s[1]==y] =x;
-  tr[x].p = z;  
-  tr[y].s[k] = tr[x].s[k^1];
-  tr[tr[x].s[k^1]].p = y;
-  tr[x].s[k^1] = y;
-  tr[y].p = x;
-  pushup(y), pushup(x);
-}
-void splay(int x, int k){
-  while(tr[x].p!=k){
-    int y=tr[x].p, z=tr[y].p;
-    if(z!=k)   // 折转底，直转中
-      (ls(y)==x)^(ls(z)==y)
-        ? rotate(x) : rotate(y);
-    rotate(x);
-  }
-  if(!k) root=x;
-}
-void insert(int v){ //插入
-  int x=root, p=0;
-  while(x && tr[x].v!=v)
-    p=x, x=tr[x].s[v>tr[x].v];
-  if(x) tr[x].cnt++;
-  else{
-    x=++idx;
-    if(p) tr[p].s[v>tr[p].v]=x;
-    tr[x].init(p,v);
-  }
-  splay(x, 0);
-}
-void find(int v){ //找到v并转到根
-  int x=root;
-  while(tr[x].s[v>tr[x].v]&&v!=tr[x].v) 
-    x=tr[x].s[v>tr[x].v]; 
-  splay(x, 0);
-}
-int get_pre(int v){ //前驱
-  find(v);
-  int x=root;
-  if(tr[x].v<v) return x;
-  x=ls(x);
-  while(rs(x)) x=rs(x);
-  splay(x, 0);
-  return x;
-}
-int get_suc(int v){ //后继
-  find(v);
-  int x=root;
-  if(tr[x].v>v) return x;
-  x=rs(x);
-  while(ls(x)) x=ls(x);
-  splay(x, 0);
-  return x;
-}
-void del(int v){ //删除
-  int pre=get_pre(v);
-  int suc=get_suc(v);
-  splay(pre,0), splay(suc,pre);
-  int del=tr[suc].s[0];
-  if(tr[del].cnt>1)
-    tr[del].cnt--, splay(del,0);
-  else
-    tr[suc].s[0]=0, splay(suc,0);
-}
-int get_rank(int v){ //排名
-  insert(v);
-  int res=tr[tr[root].s[0]].siz;
-  del(v);
-  return res;
-}
-int get_val(int k){ //数值
-    int x=root;
-    while(true){
-        if(k<=tr[ls(x)].siz) x=ls(x);
-        else if(k<=tr[ls(x)].siz+tr[x].cnt) break;
-        else k-=tr[ls(x)].siz+tr[x].cnt, x=rs(x);
+int b[1001];
+void pow(ll x)//求底数为二的幂
+{
+	memset(b,0,sizeof(b));
+	int k=1;
+	b[1]=1;
+	for(int i=1;i<=x;++i)
+    {
+        int md=0;//保存进位
+        for(int j=1;j<=k;++j)
+        {
+            b[j]=b[j]*2+md;
+            md=b[j]/10;
+            b[j]%=10;
+            if(md&&j==k)++k;
+        }
     }
-    splay(x, 0);
-    return tr[x].v;
+	add(b,k);
 }
-int main(){
-	jiasu;
-  insert(-INF);insert(INF); //哨兵
-  int n,t; cin>>n>>t;
-    for(int i=1; i<=n; i++){
-        int x; cin>>x;
-        insert(x);
-    }  
-    int res=0, last=0;
-  while(t--){
-    int op,x; cin>>op>>x;
-    x^=last;    
-    if(op==1) insert(x);
-    if(op==2) del(x);
-    if(op==3) res^=(last=get_rank(x));
-    if(op==4) res^=(last=get_val(x+1));
-    if(op==5) res^=(last=tr[get_pre(x)].v);
-    if(op==6) res^=(last=tr[get_suc(x)].v);
-  }
-  cout<<res<<endl;
-  return 0;
+ll Qpow(ll a,ll x)//快速幂
+{
+	ll res=1;
+	while(x)
+	{
+		if(x&1)res*=a;
+		a*=a;
+		x>>=1;
+	}
+	return res;
+}
+int p;	
+string s;
+ll check(ll x,ll h)//h为左括号数量，返回值应为2()这个幂的大小，并添加进ans
+{
+    ll q=0;//q为指数
+	p=0;
+    for(int i=x;i<s.length();i++)
+    {
+        p=max(p,i);
+        if(s[i]=='(') h++;
+        if(s[i]==')') h--;
+        if(!h)//左右括号对应时退出循环，并将幂的结果加入ans
+		{
+			pow(q);
+			return 0;
+		}
+		//不是最后一个右括号
+        if(s[i]==')') return Qpow(2,q);//不对应时计算幂
+        if(s[i]=='2')
+        {
+            if(s[i+1]=='(') q+=check(i+1,h),i=p;
+            else q+=2;
+        }
+    }
+}
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cin>>s;
+	for(int i=0;i<s.length();i++)
+	{
+		if(s[i]=='2')
+		{
+			if(s[i+1]=='(')
+			{
+				check(i+1,0);
+				i=p;//指针i跳转至对应的右括号
+			}
+			else //此时s[i]只是个单纯的2，不是2的幂
+			{
+				memset(b,0,sizeof(b));
+				b[1]=2;
+				add(b,1);
+			}
+		}
+	}
+	for(int i=lena;i>=1;i--)
+	{
+		cout<<ans[i];
+	}
 }
