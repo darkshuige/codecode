@@ -6,7 +6,7 @@
 #define lc(x) tr[x].l
 #define rc(x) tr[x].r
 using namespace std;
-const int maxn=200005;
+const int maxn=2000050;
 int v[maxn];
 struct node
 {
