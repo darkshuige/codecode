@@ -17,7 +17,7 @@ int find(int x)
 int merge(int x,int y)//递归合并
 {
 	if(!x || !y) return x+y;
-	if(v[x]<v[y]) swap(x,y);
+	if(v[x]>v[y]) swap(x,y);
 	rc[x]=merge(rc[x],y);
 	f[rc[x]]=x;
 	if(dis[lc[x]]<dis[rc[x]]) swap(lc[x],rc[x]);
