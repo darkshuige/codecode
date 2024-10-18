@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 #define jiasu ios::sync_with_stdio(false),cin.tie(0),cout.tie(0)
-#define int long long
+//#define int long long
 #define endl "\n"
 #define ls(x) tr[x].s[0]
 #define rs(x) tr[x].s[1]
@@ -11,19 +11,20 @@ using namespace std;
 const int maxn=200005;
 const double A=0.7;
 int g[maxn],cnt;
-double ans=2e18;
-int n,K,root,cur;
+int n,K,root,cur,op;
+int x1,x2,yy,y2,ans;
 struct node
 {
 	int l,r;
-	double v[2];
-	double L[2],U[2];
-	int siz;
+	int v[2],w;
+	int L[2],U[2];
+	int siz,sum;
 }t[maxn];
 void pushup(int p)
 {
 	t[p].siz=t[lc].siz+t[rc].siz+1;
-	for(int i=0;i<=1;i++)
+	t[p].sum=t[lc].sum+t[rc].sum+t[p].w;
+	for(int i=0;i<=1;i++)		
 	{
 		t[p].L[i]=t[p].U[i]=t[p].v[i];
 		if(lc)
@@ -80,50 +81,38 @@ void insert(int &p,int k)
 	pushup(p);
 	check(p,k);
 }
-double sq(double x) {return x*x;}
-double dis(int p)
+int query(int p)
 {
-	double s=0;
-	for(int i=0;i<=1;i++)
-	 s+=sq(t[cur].v[i]-t[p].v[i]);
-	return s;
-}
-double dis2(int p)
-{
-	if(!p) return 2e18;
-	double s=0;
-	for(int i=0;i<=1;i++)
-	{
-		s+=sq(max(0.0,t[cur].v[i]-t[p].U[i]))+
-			sq(max(0.0,t[p].L[i]-t[cur].v[i]));
-	}
-	return s;
-}
-void query(int p)
-{
-	if(!p) return ;
-	if(p!=cur) ans=min(ans,dis(p));
-	double dl=dis2(lc),dr=dis2(rc);
-	if(dl<dr)
-	{
-		if(dl<ans) query(lc);
-		if(dr<ans) query(rc);
-	}
-	else
-	{
-		if(dr<ans) query(rc);
-		if(dl<ans) query(lc);
-	}
+	if(!p || x2<t[p].L[0] || x1>t[p].U[0] || y2<t[p].L[1] || yy>t[p].U[1])
+	 return 0;
+	if(x1<=t[p].L[0] && x2>=t[p].U[0] && yy<=t[p].L[1] && y2>=t[p].U[1])
+	 return t[p].sum;
+	int res=0;
+	if(x1<=t[p].v[0]&&t[p].v[0]<=x2&&   //部分覆盖
+     yy<=t[p].v[1]&&t[p].v[1]<=y2) res+=t[p].w;
+  	return query(lc)+query(rc)+res;
 }
 signed main()
 {
 	jiasu;
 	int n; cin>>n;
-	for(int i=1;i<=n;i++)
-	 cin>>t[i].v[0]>>t[i].v[1];
-	for(cur=1;cur<=n;cur++) insert(root,0);
-	for(cur=1;cur<=n;cur++)
-	 query(root);
-	cout<<fixed<<setprecision(4)<<sqrt(ans)<<endl;
+	while(cin>>op)
+	{
+		if(op==3) break;
+		if(op==1)
+		{
+			cur++;
+			cin>>t[cur].v[0]>>t[cur].v[1]>>t[cur].w;
+			t[cur].v[0]^=ans; t[cur].v[1]^=ans; t[cur].w^=ans;
+			insert(root,0);
+		}
+		else if(op==2)
+		{
+			cin>>x1>>yy>>x2>>y2;
+			x1^=ans; yy^=ans; x2^=ans; y2^=ans;
+      		cout<<query(root)<<endl;
+      		ans=query(root);
+		}
+	}
 	return 0;
 }
