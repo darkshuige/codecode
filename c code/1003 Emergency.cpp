@@ -2,69 +2,73 @@
 #define jiasu ios::sync_with_stdio(false),cin.tie(0),cout.tie(0)
 #define int long long
 #define endl "\n"
+#define inf 0x3f3f3f3f3f3f3f3f
 using namespace std;
-const int maxn=510;
+const int maxn=1050;
 int n,m,c1,c2;
 vector<pair<int,int> >g[maxn];
 bool vis[maxn];
+int d[maxn];
 int num[maxn];
-int sum[maxn];
-int st,ans;
-void dfs(int now,int l,int s,int f)
+int ma=INT_MIN,cnt=0;
+void djst(int s)
 {
-	if(now==c2)
+	memset(vis,0,sizeof vis);
+	memset(d,inf,sizeof d);
+	d[s]=0;
+	priority_queue<pair<int,int>,vector<pair<int,int> >,greater<pair<int,int> > >q;
+	q.push({0,s});
+	while(!q.empty())
 	{
-		sum[l]++;
-		st=min(st,l);
-		return ;
-	}
-	for(auto v:g[now])
-	{
-		if(v.first==f) continue;
-		if(vis[v.first]) continue;
-		vis[v.first]=1;
-		dfs(v.first,l+v.second,s+num[v.first],now);
-		vis[v.first]=0;
+		auto k=q.top(); q.pop();
+		int u=k.second;
+		if(vis[u]) continue;
+		vis[u]=1;
+		for(auto dd:g[u])
+		{
+			int v=dd.first,w=dd.second;
+			if(d[u]+w<d[v])
+			{
+				d[v]=d[u]+w;
+				q.push({d[v],v});
+			}
+		}
 	}
 }
-void dfs2(int now,int l,int s,int f)
+void dfs(int now,int fa,int total,int ct)
 {
+	if(total>d[c2]) return ;
 	if(now==c2)
 	{
-		if(l==st)
-		 ans=max(ans,s);
+		if(total==d[c2])
+		{
+			cnt++;
+			if(ct>ma)
+			 ma=ct;
+		}
 		return ;
 	}
-	for(auto v:g[now])
+	for(auto k:g[now])
 	{
-		if(v.first==f) continue;
-		if(vis[v.first]) continue;
-		vis[v.first]=1;
-		dfs2(v.first,l+v.second,s+num[v.first],now);
-		vis[v.first]=0;
+		int v=k.first,w=k.second;
+		if(v==fa) continue;
+		dfs(v,now,total+w,ct+num[v]);
 	}
 }
 signed main()
 {
-	while(cin>>n>>m>>c1>>c2)
+	cin>>n>>m>>c1>>c2;
+	for(int i=0;i<n;i++)
+	 cin>>num[i];
+	for(int i=0;i<m;i++)
 	{
-		memset(sum,0,sizeof sum);
-		for(int i=0;i<n;i++)
-		 cin>>num[i];
-		for(int i=0;i<m;i++)
-		{
-			int x,y,z;
-			cin>>x>>y>>z;
-			g[x].push_back({y,z});
-			g[y].push_back({x,z});
-		}
-		ans=0;
-		memset(vis,0,sizeof vis);
-		st=INT_MAX;
-		dfs(c1,0,num[c1],-1);
-		memset(vis,0,sizeof vis);
-		dfs2(c1,0,num[c1],-1);
-		cout<<sum[st]<<" "<<ans<<endl;
+		int x,y,z;
+		cin>>x>>y>>z;
+		g[x].push_back({y,z});
+		g[y].push_back({x,z});
 	}
+	djst(c1);
+	dfs(c1,-1,0,num[c1]);
+	cout<<cnt<<" "<<ma<<endl;
 	return 0;
 } 
