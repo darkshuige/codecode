@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能问答系统</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, lightblue 100%);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+        #question-box {
+            position: relative;
+            margin-top: 20px;
+        }
+        #question-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        #submit-btn, #reset-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #667eea;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #submit-btn:hover, #reset-btn:hover {
+            background-color:#667fff;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .container {
+            animation: fadeIn 1s ease-in-out;
+        }
+		#answer{
+			color: black;
+		}
+    </style>
+    <!-- 样式保持不变 -->
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>欢迎来到文旅智能问答系统</h1>
+            <p>请输入你的问题，我们会尽快给你答案。</p>
+        </header>
+        <div id="question-box">
+            <input type="text" id="question-input" placeholder="在这里输入问题...">
+            <button id="submit-btn">提交问题</button>
+            <button id="reset-btn" style="margin-left: 10px;">重置</button>
+        </div>
+        <div id="answer-box">
+			<p id="answer">乌镇是一个充满历史和文化气息的小镇，有很多有趣的地方可以游玩。以下是一些推荐: <br>
+1.乌镇景区:乌镇景区是乌镇最著名的旅游景点，包括乌镇东、西两侧的古建筑群和连接两个景区的运河。你可以在这里游览古老的桥梁巡视古色古香的建筑、欣赏传统表演，还可以品尝当地的美食和购买纪念品。<br>
+2.乌镇博物馆:乌镇博物馆是一座具有悠久历史的建筑，展示了乌镇的历史、文化和传统手工艺。在这里，你可以了解到乌镇的历史文化和传统手工艺，以及观赏到很多珍贵的文物。<br>
+3.乌镇老茶馆:乌镇老茶馆是一个传统的茶馆，是一个体验乌镇文化的好去处。在这里，你可以品尝到当地最好的茶叶、品尝传统小吃聊天交流，感受乌镇的人文气息。<br>
+4.乌镇传统手工艺:乌镇是中国传统的手工艺之乡，有很多传统手工艺可以欣赏和体验，如: 木雕、石雕、细雕、中国茶艺等。在乌镇你可以看到这些传统手工艺在现代的应用和发展。<br>
+5.乌镇戏剧表演:晚上在乌镇戏剧广场，你可以欣赏到一场精彩的戏剧表演，如:花鼓戏、京剧、越剧等。这些表演都是乌镇传统表演艺术，让你更好地了解乌镇的文化和戏剧艺术。<br>
+希望这些建议可以帮助你规划一场完美的乌镇之旅!</p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('submit-btn').onclick = function() {
+            var question = document.getElementById('question-input').value;
+            fetch('http://localhost:8000/api/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({input: question})
+            })
+            .then(response => response.json())
+            .then(data => {
+                var answerBox = document.getElementById('answer-box');
+                answerBox.innerHTML = '<p>' + data.response + '</p>';
+            })
+            .catch(error => console.error('Error:', error));
+        };
+
+        document.getElementById('reset-btn').onclick = function() {
+            document.getElementById('question-input').value = '';
+            document.getElementById('answer-box').innerHTML = '';
+        };
+    </script>
+</body>
+</html>
