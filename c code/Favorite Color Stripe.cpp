@@ -4,7 +4,7 @@
 #define endl "\n"
 #define inf 0x3f3f3f3f3f3f3f3f
 using namespace std;
-const int maxn=100005;
+const int maxn=10005;
 int a[maxn];
 int b[maxn];
 int dp[300][maxn];
